@@ -13,13 +13,14 @@ public interface UserInfoService {
 
   void deleteById(Long id) throws UserException;
 
-  UserDTO signUp(UserSignUpDTO SignUpUser);
+  UserDTO signUp(UserSignUpDTO SignUpUser) throws UserException;
 
   UserDTO signIn(String usernameOrEmail, String password);
 
-  UserDTO resetPassword(String usernameOrEmail, String oldPassword, String newPassword);
+  UserDTO resetPassword(String usernameOrEmail, String oldPassword, String newPassword) throws UserException;
 
   UserDTO getProfile(String username);
 
   UserInfo findUserByUsername(String username);
+
 }

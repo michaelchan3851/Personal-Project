@@ -13,45 +13,49 @@ import com.integrated.demousermanagementsystem.infra.ApiResp;
 import com.integrated.demousermanagementsystem.infra.Code;
 import com.integrated.demousermanagementsystem.model.dto.UserDTO;
 import com.integrated.demousermanagementsystem.model.dto.UserSignUpDTO;
-import com.integrated.demousermanagementsystem.service.impl.UserInfoServiceImp;
+import com.integrated.demousermanagementsystem.service.impl.UserInfoServiceImpl;
 
 @RestController
 @RequestMapping(value = "/api/v1")
 public class UserInfoController implements UserInfoOperation {
 
   @Autowired
-  UserInfoServiceImp userInfoServiceImp;
+  UserInfoServiceImpl userInfoService;
 
   @Override
-  public ApiResp<List<UserDTO>> findAll() throws UserException{
-      List<UserDTO> userDTOs = userInfoServiceImp.findAll();
-      return ApiResp.<List<UserDTO>>builder().ok().data(userDTOs).build();
+  public ApiResp<List<UserDTO>> findAll() throws UserException {
+    List<UserDTO> userDTOs = userInfoService.findAll();
+    return ApiResp.<List<UserDTO>>builder().ok().data(userDTOs).build();
 
   }
 
   @Override
   public UserDTO signIn(String username, String password) {
-    return userInfoServiceImp.signIn(username, password);
+    return userInfoService.signIn(username, password);
   }
 
   @Override
-  public void deleteById(Long id) throws UserException{
-    userInfoServiceImp.deleteById(id);
+  public void deleteById(Long id) throws UserException {
+    userInfoService.deleteById(id);
   }
 
   @Override
-  public UserDTO signUp(UserSignUpDTO userSignUpDTO) {
-    return userInfoServiceImp.signUp(userSignUpDTO);
+  public ApiResp<UserDTO> signUp(UserSignUpDTO userSignUpDTO) throws UserException {
+    return ApiResp.<UserDTO>builder().ok().data(userInfoService.signUp(userSignUpDTO)).build();
   }
 
   @Override
-  public UserDTO resetPassword(String usernameOrEmail, String oldPassword, String newPassword) {
-    return userInfoServiceImp.resetPassword(usernameOrEmail, oldPassword, newPassword);
+  public ApiResp<UserDTO> resetPassword(String usernameOrEmail, String oldPassword, String newPassword)
+      throws UserException {
+    return ApiResp.<UserDTO>builder() //
+        .ok() //
+        .data(userInfoService.resetPassword(usernameOrEmail, oldPassword, newPassword)) //
+        .build();//
   }
 
   @Override
-  public ApiResp<UserDTO> getProfile(String username){
-    return ApiResp.<UserDTO> builder().ok().data(userInfoServiceImp.getProfile(username)).build();
+  public ApiResp<UserDTO> getProfile(String username) {
+    return ApiResp.<UserDTO>builder().ok().data(userInfoService.getProfile(username)).build();
   }
 
 }

@@ -1,5 +1,6 @@
 package com.integrated.demousermanagementsystem.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.integrated.demousermanagementsystem.check.ValidationUtils;
 import com.integrated.demousermanagementsystem.entity.UserInfo;
 import com.integrated.demousermanagementsystem.exception.UserException;
-import com.integrated.demousermanagementsystem.exception.UserNotFoundException;
+import com.integrated.demousermanagementsystem.exception.UserExistedException;
 import com.integrated.demousermanagementsystem.infra.Code;
 import com.integrated.demousermanagementsystem.model.dto.UserDTO;
 import com.integrated.demousermanagementsystem.model.dto.UserSignUpDTO;
@@ -21,7 +23,7 @@ import com.integrated.demousermanagementsystem.service.UserInfoService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class UserInfoServiceImp implements UserInfoService {
+public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
     UserInfoRepository userInfoRepository;
@@ -54,11 +56,20 @@ public class UserInfoServiceImp implements UserInfoService {
     }
 
     @Override
-    public UserDTO signUp(UserSignUpDTO SignUpUser) {
-        UserInfo newUser = userMapper.map(SignUpUser);
-        UserInfo savedUser = userInfoRepository.save(newUser);
-        return userMapper.map(savedUser);
-        // Return true if user is saved successfully, false otherwise
+    public UserDTO signUp(UserSignUpDTO SignUpUser) throws UserException {
+        ValidationUtils.isEmailValid(SignUpUser.getEmail());
+        ValidationUtils.isPasswordValid(SignUpUser.getPassword());
+        ValidationUtils.isUsernameValid(SignUpUser.getUsername());
+        try {
+            isExitedUser(SignUpUser.getUsername());
+            UserInfo newUser = userMapper.map(SignUpUser);
+            newUser.setLastLogin(LocalDateTime.now());
+            UserInfo savedUser = userInfoRepository.save(newUser);
+            return userMapper.map(savedUser);
+            // Return true if user is saved successfully, false otherwise
+        } catch (UserExistedException e) {
+            throw new UserExistedException(Code.ALREADY_EXIST);
+        }
     }
 
     @Override
@@ -68,7 +79,13 @@ public class UserInfoServiceImp implements UserInfoService {
 
         // Check if the user exists and the password matches
         if (user != null && user.getPassword().equals(password)) {
-            return userMapper.map(user);
+            // Update lastLogin field
+            user.setLastLogin(LocalDateTime.now());
+            userInfoRepository.save(user); // Save the updated user to the database
+
+            // Return the mapped user
+            UserDTO userDTO = userMapper.map(user);
+            return userDTO;
         }
 
         // Return null if user not found or password doesn't match
@@ -76,23 +93,27 @@ public class UserInfoServiceImp implements UserInfoService {
     }
 
     @Override
-    public UserDTO resetPassword(String usernameOrEmail, String oldPassword, String newPassword) {
+    public UserDTO resetPassword(String usernameOrEmail, String oldPassword, String newPassword) throws UserException {
         // First, attempt to sign in to validate the old password
         UserDTO signedInUser = signIn(usernameOrEmail, oldPassword);
 
-        // If signIn succeeds, change the password
-        if (signedInUser != null) {
-            // Find the user by username or email
-            UserInfo user = userInfoRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        try {
+            // If signIn succeeds, change the password
+            if (signedInUser != null) {
+                // Find the user by username or email
+                UserInfo user = userInfoRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
 
-            // Update the password
-            user.setPassword(newPassword);
-            UserInfo updatedUser = userInfoRepository.save(user);
+                ValidationUtils.isPasswordValid(newPassword);
+                // Update the password
+                user.setPassword(newPassword);
+                UserInfo updatedUser = userInfoRepository.save(user);
 
-            // Map the updated user to DTO and return
-            return userMapper.map(updatedUser);
+                // Map the updated user to DTO and return
+                return userMapper.map(updatedUser);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new UserException(Code.IAE_EXCEPTION);
         }
-
         // If sign-in fails, throw a RuntimeException or a custom exception
         throw new RuntimeException("Authentication failed. Invalid username/email or old password.");
     }
@@ -108,5 +129,14 @@ public class UserInfoServiceImp implements UserInfoService {
                 .filter(e -> e.getUsername().equals(username)) //
                 .findAny() //
                 .orElseThrow(() -> new EntityNotFoundException()); //
+    }
+
+    public boolean isExitedUser(String username) throws UserException {
+        if (userInfoRepository.findAll().stream() //
+                .filter(e -> e.getUsername().equals(username)) //
+                .findAny() //
+                .isPresent()) //
+            throw new UserExistedException(Code.ALREADY_EXIST);
+        return true;
     }
 }

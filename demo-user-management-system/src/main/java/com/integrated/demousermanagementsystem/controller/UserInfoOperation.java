@@ -36,20 +36,21 @@ public interface UserInfoOperation {
    * @param user
    * @throws UserException
    */
-  @DeleteMapping(value = "/user/{id}")
+  @DeleteMapping(value = "/user/delete/{id}")
   @ResponseStatus(value = HttpStatus.OK)
   void deleteById(@PathVariable Long id)throws UserException;
 
   @PostMapping("/signup")
   @ResponseStatus(value = HttpStatus.OK)
-  UserDTO signUp(@RequestBody UserSignUpDTO userSignUpDTO);
+  ApiResp<UserDTO> signUp(@RequestBody UserSignUpDTO userSignUpDTO)throws UserException;
+   
 
   @PatchMapping("/reset/password")
   @ResponseStatus(HttpStatus.OK)
-  UserDTO resetPassword(@RequestParam String usernameOrEmail,
+  ApiResp<UserDTO> resetPassword(@RequestParam String usernameOrEmail,
       @RequestParam String oldPassword,
-      @RequestParam String newPassword);
-
+      @RequestParam String newPassword) throws UserException;
+     
   /**
    * Request for the data in the UserProfile (UserDTO)
    * 
