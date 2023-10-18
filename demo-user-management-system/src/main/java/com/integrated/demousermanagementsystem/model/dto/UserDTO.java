@@ -19,7 +19,7 @@ public class UserDTO {
   private String email;
   private String contact;
   private String role;
-  private LocalDate DOB;
+  private LocalDate dob;
   private String address;
   private LocalDateTime lastLogin;
 

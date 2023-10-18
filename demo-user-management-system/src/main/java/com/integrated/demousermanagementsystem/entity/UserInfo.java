@@ -45,7 +45,7 @@ public class UserInfo implements Serializable {
 
   private String role;
 
-  private LocalDate DOB;
+  private LocalDate dob;
 
   private String address;
 

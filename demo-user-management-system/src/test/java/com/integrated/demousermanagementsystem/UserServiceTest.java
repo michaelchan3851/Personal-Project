@@ -46,7 +46,7 @@ public class UserServiceTest {
         .password("Admin1234") //
         .name("michael") //
         .gender("M")
-        .DOB(LocalDate.of(2000, 11, 11)) //
+        .dob(LocalDate.of(2000, 11, 11)) //
         .address("ABC Building") //
         .contact("12345678") //
         .email("hello@gmail.com") //
@@ -55,7 +55,7 @@ public class UserServiceTest {
         .role("Normal") //
         .name("michael")
         .gender("M")
-        .DOB(LocalDate.of(2000, 11, 11))
+        .dob(LocalDate.of(2000, 11, 11))
         .address("ABC Building")
         .contact("12345678")
         .email("hello@gmail.com")

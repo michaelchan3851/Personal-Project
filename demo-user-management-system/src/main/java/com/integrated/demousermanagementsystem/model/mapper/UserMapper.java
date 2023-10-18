@@ -26,7 +26,7 @@ public class UserMapper {
         .gender(userSignUpDTO.getGender()) //
         .email(userSignUpDTO.getEmail()) //
         .contact(userSignUpDTO.getContact()) //
-        .DOB(userSignUpDTO.getDOB()) //
+        .dob(userSignUpDTO.getDob()) //
         .address(userSignUpDTO.getAddress()) //
         .role(Role.NORMAL.getDesc()) //
         .lastLogin(LocalDateTime.now()) //
@@ -46,7 +46,7 @@ public class UserMapper {
       .email(userInfo.getEmail()) //
       .contact(userInfo.getContact())
       .role(userInfo.getRole()) //
-      .DOB(userInfo.getDOB()) //
+      .dob(userInfo.getDob()) //
       .address(userInfo.getAddress()) //
       .lastLogin(userInfo.getLastLogin()) //
       .build();

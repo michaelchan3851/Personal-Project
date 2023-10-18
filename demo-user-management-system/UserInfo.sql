@@ -14,6 +14,3 @@ CREATE TABLE user_info (
     address VARCHAR(200),
 	last_login DATE
 );
-
-
-select * from 

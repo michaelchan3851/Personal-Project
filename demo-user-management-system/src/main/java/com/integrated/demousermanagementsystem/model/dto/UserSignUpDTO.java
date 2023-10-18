@@ -20,7 +20,7 @@ public class UserSignUpDTO {
   private String gender;
   private String email;
   private String contact;
-  private LocalDate DOB;
+  private LocalDate dob;
   private String address;
   private LocalDateTime lastLogin;
   
