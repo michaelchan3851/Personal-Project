@@ -17,10 +17,11 @@ public class UserSignUpDTO {
   private String username;
   private String password;
   private String name;
-  private Character gender;
+  private String gender;
   private String email;
-  private String phoneNumber;
+  private String contact;
   private LocalDate DOB;
   private String address;
   private LocalDateTime lastLogin;
+  
 }

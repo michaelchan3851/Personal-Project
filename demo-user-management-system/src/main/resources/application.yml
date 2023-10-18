@@ -1,20 +1,10 @@
 server.port: 8085
-
 spring.datasource:
   driverClassName: 'org.hibernate.dialect.PostgreSQLDialect'
-  #driverClassName: 'org.h2.Driver'
-  #url: 'jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE'
-  #url: 'jdbc:h2:mem:testdb'
-  #username: 'sa'
-  #password:
   url: 'jdbc:postgresql://localhost:5432/postgres'
   username: 'postgres'
   password: 'admin1234'
 
 spring.jpa:
   show-sql: true
-  hibernate.ddl-auto: update # update
-  ## Hibernate Properties
-  # properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-  # properties.hibernate.dialect: org.h2.Driver
-  # Hibernate ddl auto (create, create-drop, validate, update)
+  hibernate.ddl-auto: update

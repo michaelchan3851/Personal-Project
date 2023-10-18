@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 public class UserDTO {
   private Long id;
   private String name;
-  private Character gender;
+  private String gender;
   private String email;
-  private String phoneNumber;
+  private String contact;
   private String role;
   private LocalDate DOB;
   private String address;

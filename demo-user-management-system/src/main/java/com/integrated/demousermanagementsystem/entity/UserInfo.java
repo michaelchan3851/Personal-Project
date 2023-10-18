@@ -9,8 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,15 +37,14 @@ public class UserInfo implements Serializable {
 
   private String name;
 
-  private Character gender;
+  private String gender;
 
   private String email;
 
-  private String phoneNumber;
+  private String contact;
 
   private String role;
 
-  @Column(name = "date_of_birth")
   private LocalDate DOB;
 
   private String address;

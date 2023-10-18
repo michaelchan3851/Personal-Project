@@ -13,30 +13,52 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.integrated.demousermanagementsystem.entity.UserInfo;
+import com.integrated.demousermanagementsystem.exception.UserException;
+import com.integrated.demousermanagementsystem.infra.ApiResp;
 import com.integrated.demousermanagementsystem.model.dto.UserDTO;
 import com.integrated.demousermanagementsystem.model.dto.UserSignUpDTO;
+
+import jakarta.persistence.EntityNotFoundException;
 
 public interface UserInfoOperation {
 
   @GetMapping(value = "/users")
   @ResponseStatus(value = HttpStatus.OK)
-  List<UserDTO> findAll();
+  ApiResp<List<UserDTO>> findAll() throws UserException;
 
   @PostMapping(value = "/signin")
   @ResponseStatus(value = HttpStatus.OK)
   UserDTO signIn(@RequestParam String username, @RequestParam String password);
 
+  /**
+   * For Users to delete their Account
+   * 
+   * @param user
+   * @throws UserException
+   */
   @DeleteMapping(value = "/user/{id}")
   @ResponseStatus(value = HttpStatus.OK)
-  void deleteById(@PathVariable Long id);
+  void deleteById(@PathVariable Long id)throws UserException;
 
   @PostMapping("/signup")
-  @ResponseStatus(value = HttpStatus.CREATED)
-  void signUp(@RequestBody UserSignUpDTO userSignUpDTO);
+  @ResponseStatus(value = HttpStatus.OK)
+  UserDTO signUp(@RequestBody UserSignUpDTO userSignUpDTO);
 
   @PatchMapping("/reset/password")
   @ResponseStatus(HttpStatus.OK)
-  UserDTO resetPassword(@RequestParam String usernameOrEmail, 
-                        @RequestParam String oldPassword, 
-                        @RequestParam String newPassword);
+  UserDTO resetPassword(@RequestParam String usernameOrEmail,
+      @RequestParam String oldPassword,
+      @RequestParam String newPassword);
+
+  /**
+   * Request for the data in the UserProfile (UserDTO)
+   * 
+   * @param username
+   * @return (onSuccess) Data of Profile without user password
+   * @return (onFail) Api Error Response
+   */
+  @GetMapping(value = "/profile")
+  @ResponseStatus(value = HttpStatus.OK)
+  ApiResp<UserDTO> getProfile(@RequestParam String username) throws EntityNotFoundException;
+
 }

@@ -67,13 +67,3 @@ public class ApiResp<T> {
   }
 }
 
-// {
-// "code" : 200,
-// "message" : "OK",
-// "data" : [
-
-// ],
-// "error" : [
-// "", ""
-// ],
-// }
