@@ -27,7 +27,7 @@ public interface UserInfoOperation {
   ApiResp<List<UserDTO>> findAll() throws UserException;
 
   @PostMapping(value = "/signin")
-  @ResponseStatus(value = HttpStatus.OK)
+  @ResponseStatus(value = HttpStatus.CREATED)
   UserDTO signIn(@RequestParam String username, @RequestParam String password);
 
   /**
