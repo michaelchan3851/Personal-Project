@@ -8,3 +8,7 @@ spring.datasource:
 spring.jpa:
   show-sql: true
   hibernate.ddl-auto: update
+
+spring.flyway:
+  baselineOnMigrate: true
+  locations: src/main/resources/db/migration

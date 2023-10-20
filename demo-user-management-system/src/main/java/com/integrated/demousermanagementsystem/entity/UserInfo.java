@@ -45,6 +45,7 @@ public class UserInfo implements Serializable {
 
   private String role;
 
+  @Column(name = "date_of_birth")
   private LocalDate dob;
 
   private String address;
